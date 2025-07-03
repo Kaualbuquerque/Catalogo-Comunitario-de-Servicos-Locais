@@ -1,145 +1,151 @@
 **Projeto: Catálogo Comunitário de Serviços Locais**
 
-**1. Visão Geral** O Catálogo Comunitário de Serviços Locais é uma aplicação Full‑Stack voltada a conectar prestadores de serviços (autônomos, pequenas empresas) a consumidores em uma determinada região. O objetivo é facilitar a divulgação de serviços e a busca por profissionais qualificados, promovendo o desenvolvimento comunitário e o fomento da economia local.
+**1. Visão Geral**
+O Catálogo Comunitário de Serviços Locais é uma aplicação Full‑Stack voltada a conectar prestadores de serviços (autônomos, pequenas empresas) a consumidores em uma determinada região. O objetivo é facilitar a divulgação de serviços e a busca por profissionais locais, promovendo o desenvolvimento comunitário e o fomento da economia de bairro.
 
 **2. Objetivos**
 
 * Dar visibilidade online a prestadores de serviços que ainda não possuem presença digital.
-* Oferecer aos consumidores um meio prático de encontrar e avaliar serviços próximos.
+* Oferecer aos consumidores um meio prático de encontrar e contratar serviços próximos.
 * Criar uma plataforma intuitiva, responsiva e escalável.
 
 **3. Usuários e Perfis**
 
-* **Prestador**: realiza cadastro, gerencia seu perfil e seus serviços.
-* **Consumidor**: busca serviços, avalia e comenta.
-* **Administrador**: monitora cadastros, modera comentários e resolve conflitos.
+* **Prestador**: realiza cadastro, gerencia seus serviços e atende consumidores via chat.
+* **Consumidor**: busca e contrata serviços, gerencia favoritos, histórico e notas pessoais.
 
 **4. Requisitos Funcionais**
 
 1. **Autenticação e Autorização**
 
-   * Cadastro de usuário (e‑mail, senha, nome completo, telefone, localização).
-   * Login seguro com JWT ou sessões.
-   * Reset de senha via e‑mail.
-   * Papéis: `prestador`, `consumidor`, `administrador`.
+   * Cadastro de usuário com papel (consumidor ou prestador), nome completo, e‑mail, senha (com confirmação), telefone e localização.
+   * Login com e‑mail e senha, com autenticação JWT.
+   * Recuperação de senha via e‑mail.
 
-2. **Gerenciamento de Perfil**
+2. **Dashboard**
 
-   * Prestadores podem completar perfil com foto, descrição, categorias de atuação, faixas de preço e horário de atendimento.
-   * Consumidores podem adicionar informações de contato e preferências de busca.
+   * Acesso via sidebar com rotas: Dashboard, Procurar Serviços, Favoritos, Chats e (para prestadores) Meus Serviços.
 
-3. **CRUD de Serviços**
+3. **Dashboard do Consumidor**
 
-   * Criar, ler, atualizar e excluir ofertas de serviço (título, descrição, preço, imagens, categoria).
-   * Upload de até 5 imagens por serviço.
+   * Visualização do histórico de serviços utilizados: cards com nome do serviço, provedor, descrição, data e localização.
+   * Lista de serviços favoritos.
+   * Seção de notas pessoais, com data e conteúdo, além de botão para adicionar novas notas.
 
-4. **Busca e Filtros**
+4. **Busca de Serviços**
 
-   * Busca por palavra-chave, categoria e localização (cidade/bairro).
-   * Filtro por faixa de preço e avaliação.
-   * Ordenação: mais próximos, melhor avaliados, mais recentes.
+   * Página com barra de pesquisa, filtros por categoria e faixa de preço.
+   * Exibição de serviços em cards (imagem, nome, provedor, localização, categoria), com botões "Favoritar" e "Contratar".
 
-5. **Página de Detalhe de Serviço**
+5. **Favoritos**
 
-   * Exibe informações completas, galeria de imagens, mapa de localização e perfil do prestador.
-   * Botão para contato direto (chat interno ou redirecionamento para WhatsApp/e‑mail).
+   * Página com os serviços favoritos do usuário.
+   * Mesmos filtros e estrutura da busca de serviços.
 
-6. **Avaliações e Comentários**
+6. **Chats**
 
-   * Consumidores podem avaliar de 1 a 5 estrelas e deixar comentários.
-   * Sistema de moderação automático/básico (filtro de palavrões, denúncia de abuso).
-   * Exibição do rating médio e número de avaliações.
+   * Lista de conversas com nome do contato, última mensagem e horário.
+   * Ao clicar, o usuário acessa o histórico de mensagens e pode enviar novas.
 
-7. **Chat ou Mensagens** (MVP opcional)
+7. **Meus Serviços (para Prestadores)**
 
-   * Chat em tempo real (Socket.io ou WebSockets).
-   * Histórico de conversas acessível para ambos os usuários.
+   * Tela de gerenciamento de serviços: listar, editar ou remover.
+   * Formulário para criar novo serviço com os seguintes campos: nome, descrição, preço, localização (opcional), categoria, imagens (opcionais).
 
-8. **Notificações**
+8. **Serviços**
 
-   * E‑mail ou push (via browser) para novos comentários, mensagens ou reservas.
+   * Cada serviço possui: nome, descrição, preço, localização (opcional), categoria, imagens (até 5).
 
-9. **Admin Dashboard**
+**5. Arquitetura e Tecnologias Sugeridas**
 
-   * Listagem de usuários, serviços e avaliações.
-   * Ferramentas de moderação: banimento, edição e exclusão de conteúdos.
+* **Front‑end**: Next.js + Tailwind CSS.
+* **Back‑end**: NestJS.
+* **Banco de Dados**: PostgreSQL ou MongoDB.
+* **Autenticação**: JWT.
+* **Chat**: Socket.io (ou alternativa).
+* **Deploy**: Vercel (Front) + Railway (Back).
 
-**5. Requisitos Não‑Funcionais**
+**6. Diagrama de Classes (UML)**
 
-* **Performance**: tempo de resposta < 200ms em consultas comuns.
-* **Segurança**: criptografia de senhas (bcrypt), proteção contra XSS, CSRF e injeção de SQL.
-* **Escalabilidade**: arquitetura em camadas, API RESTful e possibilidade de migrar para microserviços.
-* **Disponibilidade**: deploy em plataformas cloud com auto‑scaling.
-* **Responsividade**: suporte completo a dispositivos móveis.
+```mermaid
+classDiagram
+    %% Classes principais
+    class User {
+      +String id
+      +String name
+      +String email
+      +String password
+      +String location
+      +String phone
+      +String role
+    }
+    class Consumer
+    class Provider
 
-**6. Arquitetura e Tecnologias Sugeridas**
+    class Service {
+      +String id
+      +String name
+      +String description
+      +Decimal price
+      +String location
+      +String category
+      +List<String> images
+    }
+    class Favorite {
+      +String id
+    }
+    class Note {
+      +String id
+      +DateTime createdAt
+      +String text
+    }
+    class Conversation {
+      +String id
+    }
+    class Message {
+      +String id
+      +DateTime timestamp
+      +String content
+    }
 
-* **Front‑end**: React + Tailwind CSS + React Router.
-* **Back‑end**: Node.js + Express.
-* **Banco de Dados**: PostgreSQL (hosted) ou MongoDB (NoSQL).
-* **Autenticação**: JWT + Passport.js.
-* **Armazenamento de Arquivos**: AWS S3 ou Cloudinary.
-* **Mapas**: Mapbox ou Leaflet.js + OpenStreetMap.
-* **Chat**: Socket.io.
-* **Deploy**: Vercel (Front) + Heroku/Railway/AWS Elastic Beanstalk (API).
+    %% Herança de usuários
+    Consumer --|> User
+    Provider --|> User
+
+    %% Relações consumidor‑serviço
+    Consumer "1" -- "*" Favorite : favorites
+    Favorite "*" -- "1" Service : service
+
+    Consumer "1" -- "*" Note : notes
+
+    %% Serviços oferecidos por providers
+    Provider "1" -- "*" Service : services
+
+    %% Conversas e mensagens
+    Conversation "1" -- "*" Message : messages
+    Message "*" -- "1" User : sender
+    Conversation "*" -- "2" User : participants
+
+    %% Histórico de uso (associação direta, opcional de mapear)
+    Consumer "1" -- "*" Service : history
+
+```
 
 **7. API RESTful (rotas principais)**
 
-| Método | Rota                       | Descrição                     |
-| ------ | -------------------------- | ----------------------------- |
-| POST   | /api/auth/register         | Cadastro de usuário           |
-| POST   | /api/auth/login            | Login                         |
-| GET    | /api/users/me              | Obter dados do usuário logado |
-| PUT    | /api/users/me              | Atualizar perfil              |
-| POST   | /api/services              | Criar serviço                 |
-| GET    | /api/services              | Listar serviços (com filtros) |
-| GET    | /api/services/\:id         | Detalhe de um serviço         |
-| PUT    | /api/services/\:id         | Atualizar serviço             |
-| DELETE | /api/services/\:id         | Deletar serviço               |
-| POST   | /api/services/\:id/images  | Upload de imagens             |
-| POST   | /api/services/\:id/reviews | Criar avaliação               |
-| GET    | /api/services/\:id/reviews | Listar avaliações             |
-
-**8. Sugestões de Design e UX**
-
-* **Paleta de cores**: tons amigáveis (azuis suaves, verdes) para transmitir confiança.
-* **Tipografia**: fonte sans-serif legível (e.g., Inter, Roboto).
-* **Layout**: homepage com busca central, cards de serviços em grid responsivo.
-* **Mapa interativo**: mostra pinos de localização com agrupamento em zoom.
-* **Perfil de prestador**: destaque para avaliações e galeria de imagens.
-* **Fluxo de conversão**: clear CTAs (botões "Contratar" ou "Entrar em contato").
-
-**9. Pipeline de Desenvolvimento**
-
-1. Configurar repositório Git separado.
-2. Definir branches: `main`, `dev`, `feature/*`.
-3. Configurar CI (GitHub Actions) com linting e testes básicos.
-4. Iniciar front‑end e back‑end em paralelo com Docker Compose (MVP).
-5. Implementar autenticação e CRUD básico.
-6. Adicionar busca, filtros e upload de imagens.
-7. Incluir sistema de avaliações e moderação.
-8. Refatorar, otimizar performance e melhorar UX.
-9. Deploy em ambiente de staging e depois em produção.
-
-**10. Testes e Qualidade**
-
-* **Back‑end**: Jest + Supertest para rotas e validações.
-* **Front‑end**: React Testing Library + Cypress para fluxos críticos.
-* **Análise estática**: ESLint + Prettier.
-
-**11. Monitoramento e Manutenção**
-
-* Logs estruturados (Winston ou similar).
-* Health checks e monitoramento (New Relic, Sentry).
-* Backup automático do banco de dados.
-
-**12. Possíveis Extensões Futuras**
-
-* Integração com pagamento online (Stripe, PayPal).
-* Ranking gamificado para prestadores.
-* Suporte para múltiplas línguas.
-* PWA para offline básico.
+| Método | Rota                      | Descrição                     |
+| ------ | ------------------------- | ----------------------------- |
+| POST   | /api/auth/register        | Cadastro de usuário           |
+| POST   | /api/auth/login           | Login                         |
+| GET    | /api/users/me             | Obter dados do usuário logado |
+| PUT    | /api/users/me             | Atualizar perfil              |
+| POST   | /api/services             | Criar serviço                 |
+| GET    | /api/services             | Listar serviços (com filtros) |
+| GET    | /api/services/\:id        | Detalhar um serviço           |
+| PUT    | /api/services/\:id        | Atualizar serviço             |
+| DELETE | /api/services/\:id        | Deletar serviço               |
+| POST   | /api/services/\:id/images | Upload de imagens             |
 
 ---
 
-Este documento serve como guia base para a implementação do MVP e a evolução do Catálogo Comunitário de Serviços Locais.
+Este documento serve como guia principal para a implementação do MVP e a evolução futura do Catálogo Comunitário de Serviços Locais.
